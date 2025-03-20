@@ -1,12 +1,11 @@
-from flask import Flask, request, jsonify, render_template
+import os
+
+import gensim
 import pandas as pd
 import spacy
-from textblob import TextBlob
-import gensim
+from flask import Flask, request, jsonify, render_template
 from gensim import corpora
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-import os
+from textblob import TextBlob
 
 # Load spaCy NLP model
 nlp = spacy.load("en_core_web_sm")
@@ -113,7 +112,26 @@ def home():
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    text = request.form.get("text")
+    text = request.form.get("text", "").strip()
+    file = request.files.get("file")
+
+    # Handle file upload
+    if file:
+        filename = file.filename
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(filepath)
+
+        # Read text from file
+        if filename.endswith(".txt"):
+            with open(filepath, "r", encoding="utf-8") as f:
+                text = f.read()
+        elif filename.endswith(".csv"):
+            df = pd.read_csv(filepath)
+            if 'text' in df.columns:
+                text = " ".join(df['text'].dropna().tolist())
+            else:
+                return jsonify({"error": "CSV must contain a 'text' column"})
+
     if not text:
         return jsonify({"error": "No text provided"})
 
@@ -125,19 +143,15 @@ def analyze():
     miner.load_data(text)
     miner.preprocess(lowercase, remove_punct, remove_stopwords, lemmatize)
     sentiment = miner.sentiment_analysis()
-    # wordcloud = miner.generate_word_cloud()  # Commented out
     miner.train_model()
     topics = miner.topic_modeling()
 
     return jsonify({
         "sentiment": sentiment.get("sentiments", [0])[0],
-        # "wordcloud": wordcloud.get("wordcloud", ""),  # Commented out
         "topics": topics.get("topics", []),
-        "processed_text": " ".join(miner.processed_docs[0]),  # Get preprocessed text
-        "keywords": list(topics.get("topics", []))  # Use extracted topics as keywords
+        "processed_text": " ".join(miner.processed_docs[0]),  # Processed text
+        "keywords": list(topics.get("topics", []))  # Keywords are extracted topics
     })
-
-
 
 
 if __name__ == "__main__":

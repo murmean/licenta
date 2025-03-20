@@ -1,31 +1,14 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-}
-
-.container {
-    max-width: 1000px;
-    margin: auto;
-}
-
-textarea {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-button {
-    width: 100%;
-}
-
 #processedText {
     margin-top: 20px;
     font-size: 16px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    resize: none;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
-mark {
-    background-color: yellow;
-    font-weight: bold;
-}
 .highlight {
     background-color: yellow;
     font-weight: bold;
@@ -33,3 +16,23 @@ mark {
     border-radius: 3px;
 }
 
+#fileInfo {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+#fileName {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+#removeFileBtn {
+    font-size: 12px;
+    padding: 5px 8px;
+}
+
+#downloadTextBtn {
+    display: none;
+    width: 100%;
+}

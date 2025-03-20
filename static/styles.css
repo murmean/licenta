@@ -1,31 +1,31 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-}
-
-.container {
-    max-width: 1000px;
-    margin: auto;
-}
-
-textarea {
-    width: 100%;
+/* Ensure Preprocessing Options Are Visible */
+.row {
     margin-bottom: 10px;
 }
 
-button {
-    width: 100%;
+/* Fix Processed Text Box Size */
+#processedText {
+    margin-top: 10px;
+    font-size: 16px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    resize: none;
+    max-height: 300px; /* Limit height to avoid pushing buttons out */
+    overflow-y: auto;
 }
 
-#processedText {
-    margin-top: 20px;
+/* Fix Button Size */
+.btn {
     font-size: 16px;
 }
 
-mark {
-    background-color: yellow;
-    font-weight: bold;
+/* Center Buttons */
+.text-center {
+    display: flex;
+    justify-content: center;
 }
+
 .highlight {
     background-color: yellow;
     font-weight: bold;
@@ -33,3 +33,24 @@ mark {
     border-radius: 3px;
 }
 
+#fileInfo {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+#fileName {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+#removeFileBtn {
+    font-size: 12px;
+    padding: 5px 8px;
+}
+
+#downloadTextBtn {
+    display: none; /* It will be shown when text is processed */
+    width: 100%;
+    text-align: center;
+}

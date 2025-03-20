@@ -60,14 +60,16 @@ class TextMiner:
         return {"sentiments": sentiments}
 
     def generate_word_cloud(self):
-        words = [word for doc in self.processed_docs for word in doc]
-        if not words:
-            return {"error": "No words available for word cloud."}
+        # words = [word for doc in self.processed_docs for word in doc]
+        # if not words:
+        #     return {"error": "No words available for word cloud."}
 
-        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(" ".join(words))
-        wordcloud_path = os.path.join("static", "wordcloud.png")
-        wordcloud.to_file(wordcloud_path)
-        return {"wordcloud": wordcloud_path}
+        # wordcloud = WordCloud(width=800, height=400, background_color='white').generate(" ".join(words))
+        # wordcloud_path = os.path.join("static", "wordcloud.png")
+        # wordcloud.to_file(wordcloud_path)
+        # return {"wordcloud": wordcloud_path}
+
+        return {"wordcloud": None}  # Return None instead of generating the word cloud
 
     def train_model(self):
         if not self.processed_docs:
@@ -82,8 +84,23 @@ class TextMiner:
     def topic_modeling(self):
         if not self.model_trained:
             return {"error": "Train the model first!"}
+
+        # Extract top topics
         topics = self.model.print_topics(num_words=5)
-        return {"topics": topics}
+
+        # Extract Named Entities and noun chunks for better topic labels
+        entity_topics = set()
+        for doc in self.documents:
+            nlp_doc = nlp(doc)
+            for ent in nlp_doc.ents:  # Named Entities
+                entity_topics.add(ent.text)
+            for chunk in nlp_doc.noun_chunks:  # Noun phrases
+                entity_topics.add(chunk.text)
+
+        # Keep only meaningful topics
+        filtered_topics = [topic for topic in entity_topics if len(topic.split()) > 1]
+
+        return {"topics": filtered_topics[:5]}  # Return top 5 topics
 
 
 miner = TextMiner()
@@ -97,18 +114,6 @@ def home():
 @app.route("/analyze", methods=["POST"])
 def analyze():
     text = request.form.get("text")
-    file = request.files.get("file")
-    filename = None
-
-    if file:
-        filename = file.filename
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(filepath)
-        df = pd.read_csv(filepath)
-        if 'text' not in df.columns:
-            return jsonify({"error": "CSV must contain a 'text' column"})
-        text = " ".join(df['text'].dropna().tolist())
-
     if not text:
         return jsonify({"error": "No text provided"})
 
@@ -120,31 +125,19 @@ def analyze():
     miner.load_data(text)
     miner.preprocess(lowercase, remove_punct, remove_stopwords, lemmatize)
     sentiment = miner.sentiment_analysis()
-    wordcloud = miner.generate_word_cloud()
+    # wordcloud = miner.generate_word_cloud()  # Commented out
     miner.train_model()
     topics = miner.topic_modeling()
 
-    # Extract Keywords using spaCy
-    doc = nlp(text)
-    keywords = set()
-
-    for ent in doc.ents:
-        keywords.add(ent.text)
-    for chunk in doc.noun_chunks:
-        keywords.add(chunk.text)
-
-    words = [token.text.lower() for token in doc if token.is_alpha and not token.is_stop]
-    common_words = pd.Series(words).value_counts()[:10].index.tolist()
-    keywords.update(common_words)
-
     return jsonify({
-        "filename": filename if filename else "No file uploaded",
         "sentiment": sentiment.get("sentiments", [0])[0],
-        "wordcloud": wordcloud.get("wordcloud", ""),
+        # "wordcloud": wordcloud.get("wordcloud", ""),  # Commented out
         "topics": topics.get("topics", []),
-        "text": text,
-        "keywords": list(keywords)
+        "processed_text": " ".join(miner.processed_docs[0]),  # Get preprocessed text
+        "keywords": list(topics.get("topics", []))  # Use extracted topics as keywords
     })
+
+
 
 
 if __name__ == "__main__":

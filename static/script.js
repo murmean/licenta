@@ -23,28 +23,29 @@ document.getElementById("textForm").addEventListener("submit", async function(ev
         // Display sentiment
         document.getElementById("sentiment").textContent = data.sentiment.toFixed(2);
 
-        // Display word cloud
-        if (data.wordcloud) {
-            let wordcloudImage = document.getElementById("wordcloud");
-            wordcloudImage.src = data.wordcloud + "?timestamp=" + new Date().getTime();
-            wordcloudImage.style.display = "block";
-        }
+        // Hide Word Cloud (Commented Out)
+        // if (data.wordcloud) {
+        //     let wordcloudImage = document.getElementById("wordcloud");
+        //     wordcloudImage.src = data.wordcloud + "?timestamp=" + new Date().getTime();
+        //     wordcloudImage.style.display = "block";
+        // }
 
-        // Display topics
+        // Display improved topics
         let topicsList = document.getElementById("topics");
         topicsList.innerHTML = "";
         data.topics.forEach(topic => {
             let li = document.createElement("li");
-            li.textContent = topic[1];
+            li.textContent = topic;
             topicsList.appendChild(li);
         });
 
-        // Highlight important keywords
-        let processedText = data.text;
+        // Highlight keywords in processed text
+        let processedText = data.processed_text;
         let keywords = data.keywords || [];
+
         keywords.forEach(keyword => {
             let regex = new RegExp(`\\b${keyword}\\b`, "gi");
-            processedText = processedText.replace(regex, `<mark>${keyword}</mark>`);
+            processedText = processedText.replace(regex, `<span class="highlight">${keyword}</span>`);
         });
 
         // Display processed text with highlights

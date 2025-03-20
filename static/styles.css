@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+textarea {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+button {
+    width: 100%;
+}
+
+#processedText {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+mark {
+    background-color: yellow;
+    font-weight: bold;
+}

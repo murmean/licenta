@@ -1,0 +1,1 @@
+<span class="highlight">The quick brown fox</span> jumped over <span class="highlight">the lazy dog</span> . This is <span class="highlight">a test sentence</span> to remove stopwords .

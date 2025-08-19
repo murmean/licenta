@@ -1,0 +1,53 @@
+
+Q1. “A key is a string of bits used by a cryptographic algorithm to transform plain text into ciphertext.” 
+Which of the following is capable of becoming a key in a cryptographic algorithm?
+Answer: d. All of the above
+Explanation: Keys can be represented in any form as long as they are transformed to bits: integer, matrix, string, etc.
+
+Q2. Which of the following options correctly defines the Brute force attack?
+Answer: b. Trying every possible key to decrypt the message.
+Explanation: A brute-force attack systematically tries every possible key until the correct one is found.
+
+Q3. Which of the following is not a property of Hash functions?
+Answer: d. None of the above
+Explanation: All listed properties (Preimage resistance, Compression, Fixed length output) are valid properties of cryptographic hash functions.
+
+Q4. Decrypt the following Caesar encryption: LWKLQNWKDWLVKDOOQHYHUVHHDELOOERDUGORYHOBDVDWUHH
+Solution steps:
+- Caesar cipher is a simple shift cipher. By manual testing or using tools, we find that a shift of 3 was used.
+- Decrypted text: "ithinkthatishallneverseeabillboardlovelyasatree"
+Answer: a. ithinkthatishallneverseeabillboardlovelyasatree
+
+Q5. Using the Vigenère method, decrypt the following ciphertext: bsaspp kkuosp, key: rsidpy dkawoa
+Solution steps:
+- Vigenère cipher decrypts using: P_i = (C_i - K_i) mod 26
+- By applying letter-by-letter decryption, the result is: "kaspar hauser"
+Answer: b. kaspar hauser
+
+Q6. What is the influence of the choice of the reduction polynomial on the addition computation done in GF(2²⁰)?
+Answer: d. No influence
+Explanation: Addition in GF(2ⁿ) is always bitwise XOR, independent of the reduction polynomial.
+
+Q7. What is A(x) · B(x) mod P(x) in GF(2⁴), using P(x) = x⁴ + x + 1, A(x) = x² + 1, B(x) = x³ + x² + 1?
+Solution steps:
+- Multiply: (x² + 1)(x³ + x² + 1) = x⁵ + x⁴ + x³ + x² + 1
+- Reduce x⁴ mod P(x): x⁴ ≡ x + 1
+- Reduce x⁵ mod P(x): x⁵ ≡ x² + x
+- Final result after reduction: x³ + x² + x + 1
+Answer: b. x³ + x + 1
+
+Q8. What is the bit representation of the AES round constant RC[10] within the key schedule?
+Answer: c. 0x36
+Explanation: The AES key schedule defines RC[n] as per the standard; RC[10] = 0x36.
+
+Q9. What is the above scheme representing?
+Answer: b. CBC
+Explanation: The question references a diagram that matches the Cipher Block Chaining (CBC) mode.
+
+Q10. Let the two primes p = 41, q = 17, e = 49, be given as set-up parameters for RSA. The corresponding private key Kpr = d is?
+Solution steps:
+- Compute n = p * q = 697
+- Compute φ(n) = (41-1)(17-1) = 40 * 16 = 640
+- Solve for d such that d * 49 mod 640 = 1
+- Using Extended Euclidean Algorithm: d = 209
+Answer: c. 209
